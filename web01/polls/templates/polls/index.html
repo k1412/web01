@@ -1,0 +1,12 @@
+<!-- 模板里面的链接要免修改 -->
+{% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        <!-- <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li> -->
+        <!-- 上面就属于硬链接，是难以维护和升级的． -->
+        <li><a href="{% url 'polls:detail' question.id %}">{{question.question_text}}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
