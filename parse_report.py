@@ -30,6 +30,7 @@ class ParseReport:
     def parse(self):
         reports = self.read_file()
         self.save_or_update_reports(reports)
+        # 第一步读取文件,第二步写入数据库
 
 
 
@@ -221,8 +222,12 @@ class ParseReport:
                 print(report_name + "  " + service_user + "  " + data_user + "  " + str(report_user) + "  "
                       + str(report_copy))
                 is_report_exists = self.check_report_exists(connection,report_name)
+
                 if is_report_exists:
                     exist_reports.add(report_name)
+
+
+                # 就是这段的逻辑需要重新修改一下，没有找到收件人，那就说明要把这个收件人加进去啊，
                 for receiver in report_user:
                     is_receiver_exits = self.check_report_receiver(connection,receiver)
                     if not is_receiver_exits:
@@ -239,12 +244,15 @@ class ParseReport:
                     report_str += report + ","
                 print("已经存在的报表数:" + str(len(exist_reports))  + "  " + report_str)
 
+            # 这里还提醒了一下是否邮箱存在
+            # 这里有一个关键点使得加入联系人是很麻烦的，那就是
+
             if exist_receiver is not None and len(exist_receiver) > 0:
                 receiver_str = ""
                 for receiver in exist_receiver:
                     receiver_str += receiver + ","
                 print("需要确定邮箱是否存在:" + str(len(exist_receiver)) + "  " + receiver_str)
-		sys.exit(1)
+                sys.exit(1)
 
             if self.force:
                 print("强制执行操作,对已有的报表执行更新操作,对不存在的收件人执行插入操作,收件人姓名为邮箱,需手动更改姓名")
